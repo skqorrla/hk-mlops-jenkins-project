@@ -12,11 +12,14 @@ pipeline {
 				}
 			}
 		}
-		stage("build") {
+		stage("Checkout") {
 			steps {
-				script {
-					gv.BuildApp()
-				}
+				checkout scm
+			}
+		}
+		stage("Build") {
+			steps {
+				sh 'docker compose build web'
 			}
 		}
 		stage("test") {
@@ -27,15 +30,13 @@ pipeline {
 			}
 			steps {
 				script {
-					gv.TestApp()
+					gv.testApp()
 				}
 			}
 		}
 		stage("deploy") {
 			steps {
-				script {
-					gv.DeployApp()
-				}
+				sh "docker compose up -d"
 			}
 		}
 	}
